@@ -66,7 +66,9 @@ No recopila ni envía datos. Solo consulta la API pública de [Iconify](https://
 
 Está inspirada en la extensión para Chrome **Iconify Search Extension** ([Chrome Web Store](https://chromewebstore.google.com/detail/iconify-search-extension/giledbfknmilhcidlelgochpiohilhhc)), de la que me gustó la idea del buscador en un popup.
 
-La diferencia es que esa versión **requiere una licencia paga** (se compra en Gumroad) y **no está publicada para Firefox**, así que esta es una implementación libre, propia y multiplataforma inspirada en esa idea.
+## Licencia
+
+[MIT](LICENSE).
 
 ## Créditos
 
