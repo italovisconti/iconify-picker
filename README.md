@@ -70,6 +70,12 @@ No recopila ni envía datos. Solo consulta la API pública de [Iconify](https://
 
 Está inspirada en la extensión para Chrome **Iconify Search Extension** ([Chrome Web Store](https://chromewebstore.google.com/detail/iconify-search-extension/giledbfknmilhcidlelgochpiohilhhc)), de la que me gustó la idea del buscador en un popup.
 
+## Aviso sobre IA
+
+Este proyecto fue **desarrollado con asistencia de inteligencia artificial** (código, textos y assets). Aunque se probó, tenlo en cuenta y úsalo bajo tu propio criterio.
+
+*This project was developed with AI assistance.*
+
 ## Licencia
 
 [MIT](LICENSE).
