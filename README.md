@@ -20,11 +20,13 @@ Extensión de navegador para buscar entre los **+200.000 iconos open source** de
 
 ### Firefox
 
+**Permanente (recomendado):** descarga el `.xpi` firmado desde [Releases](https://github.com/italovisconti/iconify-picker/releases/latest) y ábrelo con Firefox (o arrástralo a una ventana). Confirma la instalación. Al estar firmado por Mozilla, queda instalado de forma permanente.
+
+**Temporal (para probar):**
 1. Abre `about:debugging#/runtime/this-firefox`
 2. *Cargar complemento temporal* → elige `manifest.json`
-3. Queda activa hasta reiniciar Firefox.
 
-Requiere Firefox **142 o superior**. Para dejarla permanente hay que firmarla gratis en [addons.mozilla.org](https://addons.mozilla.org) (self-distribution).
+Requiere Firefox **142 o superior**.
 
 ### Chrome / Edge / Brave
 
