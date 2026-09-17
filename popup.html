@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iconify Picker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <input id="q" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search icons (home, arrow, user...)" autocomplete="off" spellcheck="false">
+  </header>
+
+  <div id="sources" class="sources"></div>
+
+  <div id="picker" class="picker" hidden>
+    <div class="picker-head">
+      <input id="pickFilter" type="search" data-i18n-placeholder="filterPlaceholder" placeholder="Filter collections..." autocomplete="off" spellcheck="false">
+      <button id="clearSources" class="link" data-i18n="clear">Clear</button>
+    </div>
+    <div id="pickList" class="pick-list"></div>
+  </div>
+
+  <div id="status" class="status" data-i18n="emptyHint">Type to search 200,000+ icons.</div>
+  <main id="grid" class="grid"></main>
+  <footer class="hint" data-i18n="hint">Arrows navigate &middot; Enter copy SVG &middot; d download &middot; p PNG &middot; / search</footer>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="popup.js"></script>
+</body>
+</html>

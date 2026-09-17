@@ -1,0 +1,86 @@
+{
+  "appName": {
+    "message": "Iconify Picker"
+  },
+  "appDesc": {
+    "message": "Search 200,000+ open source icons from Iconify and copy them as SVG or PNG."
+  },
+  "searchPlaceholder": {
+    "message": "Search icons (home, arrow, user...)"
+  },
+  "filterPlaceholder": {
+    "message": "Filter collections..."
+  },
+  "clear": {
+    "message": "Clear"
+  },
+  "allCollections": {
+    "message": "All collections"
+  },
+  "noMatches": {
+    "message": "No matches"
+  },
+  "emptyHint": {
+    "message": "Type to search 200,000+ icons."
+  },
+  "searching": {
+    "message": "Searching..."
+  },
+  "loadingIcons": {
+    "message": "Loading icons..."
+  },
+  "noResults": {
+    "message": "No results."
+  },
+  "networkError": {
+    "message": "Network error"
+  },
+  "error": {
+    "message": "Error"
+  },
+  "pngError": {
+    "message": "PNG error"
+  },
+  "iconOne": {
+    "message": "icon"
+  },
+  "iconsMany": {
+    "message": "icons"
+  },
+  "inWord": {
+    "message": "in"
+  },
+  "scopeAll": {
+    "message": "all collections"
+  },
+  "sourceOne": {
+    "message": "source"
+  },
+  "sourcesMany": {
+    "message": "sources"
+  },
+  "addSource": {
+    "message": "Add source"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "downloadSvg": {
+    "message": "Download SVG"
+  },
+  "copyPng": {
+    "message": "Copy as PNG"
+  },
+  "svgCopied": {
+    "message": "SVG copied"
+  },
+  "svgDownloaded": {
+    "message": "SVG downloaded"
+  },
+  "pngCopied": {
+    "message": "PNG copied"
+  },
+  "hint": {
+    "message": "Arrows navigate \u00b7 Enter copy SVG \u00b7 d download \u00b7 p PNG \u00b7 / search"
+  }
+}
