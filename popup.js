@@ -1,5 +1,5 @@
 const API = "https://api.iconify.design";
-const STORAGE_KEY = "iconify-picker:sources";
+const STORAGE_KEY = "open-icon-picker:sources";
 
 const i18n =
   (globalThis.browser && globalThis.browser.i18n) ||

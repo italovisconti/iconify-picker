@@ -1,6 +1,8 @@
-# Iconify Picker
+# Open Icon Picker
 
 Extensión de navegador para buscar entre los **+200.000 iconos open source** de [Iconify](https://iconify.design) y copiarlos al instante. Sin descargas, sin marcas de agua, sin licencias.
+
+> Usa el catálogo abierto de Iconify. No está afiliada a Iconify OÜ.
 
 ![Búsqueda con múltiples sources](docs/screenshot-grid.png)
 
@@ -20,7 +22,7 @@ Extensión de navegador para buscar entre los **+200.000 iconos open source** de
 
 ### Firefox
 
-**Permanente (recomendado):** descarga el `.xpi` firmado desde [Releases](https://github.com/italovisconti/iconify-picker/releases/latest) y ábrelo con Firefox (o arrástralo a una ventana). Confirma la instalación. Al estar firmado por Mozilla, queda instalado de forma permanente.
+**Permanente (recomendado):** descarga el `.xpi` firmado desde [Releases](https://github.com/italovisconti/open-icon-picker/releases/latest) y ábrelo con Firefox (o arrástralo a una ventana). Confirma la instalación. Al estar firmado por Mozilla, queda instalado de forma permanente.
 
 **Temporal (para probar):**
 1. Abre `about:debugging#/runtime/this-firefox`
@@ -32,7 +34,7 @@ Requiere Firefox **142 o superior**.
 
 1. Abre `chrome://extensions`
 2. Activa **Modo desarrollador**
-3. *Cargar descomprimida* → elige la carpeta `iconify-picker`
+3. *Cargar descomprimida* → elige la carpeta `open-icon-picker`
 
 ## Uso
 
