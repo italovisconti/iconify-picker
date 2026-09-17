@@ -77,10 +77,31 @@
   "svgDownloaded": {
     "message": "SVG descargado"
   },
+  "addToPack": {
+    "message": "Agregar al pack"
+  },
+  "removeFromPack": {
+    "message": "Quitar del pack"
+  },
+  "inPack": {
+    "message": "en el pack"
+  },
+  "downloadZip": {
+    "message": "Descargar ZIP"
+  },
+  "packPreparing": {
+    "message": "Preparando pack..."
+  },
+  "packDownloaded": {
+    "message": "Pack descargado"
+  },
+  "packError": {
+    "message": "No se pudo generar el pack"
+  },
   "pngCopied": {
     "message": "PNG copiado"
   },
   "hint": {
-    "message": "\u2190\u2191\u2193\u2192 navegar \u00b7 Enter copiar SVG \u00b7 d descargar \u00b7 p PNG \u00b7 / buscar"
+    "message": "\u2190\u2191\u2193\u2192 navegar \u00b7 Enter copiar SVG \u00b7 d descargar \u00b7 p PNG \u00b7 a pack \u00b7 / buscar"
   }
 }

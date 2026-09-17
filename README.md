@@ -14,6 +14,7 @@ Extensión de navegador para buscar entre los **+200.000 iconos open source** de
 - **Clic** en un icono → copia el **código SVG** (negro) al portapapeles.
 - **↓** → descarga el `.svg`.
 - **PNG** → copia el icono como **imagen**, para pegarlo directo con Ctrl+V en Canva, Figma, etc.
+- **Packs**: agrega varios iconos y descárgalos todos juntos en un `.zip` (cada uno como `.svg`), listos para subir a Canva de una sola vez.
 - Interfaz en **español e inglés** (según el idioma del navegador).
 
 ![Selector de sources](docs/screenshot-sources.png)
@@ -41,8 +42,9 @@ Requiere Firefox **142 o superior**.
 1. Escribe qué buscas (`home`, `arrow`, `user`...).
 2. Opcional: toca **+** y agrega las colecciones donde quieres buscar. Sin pills, busca en todas.
 3. Haz clic en un icono para copiar su SVG, o usa los botones **↓** / **PNG**.
+4. Para varios iconos: agrégalos al **pack** (botón **+** del icono, tecla `a` o Ctrl+clic) y usa **Descargar ZIP** para bajarlos todos juntos, cada uno como `.svg` listo para subir a Canva.
 
-La selección de sources se recuerda entre sesiones.
+La selección de sources y el pack se recuerdan entre sesiones.
 
 ## Atajos de teclado
 
@@ -56,6 +58,7 @@ La selección de sources se recuerda entre sesiones.
 | `Enter` | Copiar el SVG del icono enfocado |
 | `d` | Descargar el SVG |
 | `p` | Copiar como PNG |
+| `a` | Agregar / quitar del pack |
 | `Esc` | Volver al buscador / cerrar el selector |
 
 ## Idiomas

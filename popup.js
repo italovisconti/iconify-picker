@@ -1,5 +1,6 @@
 const API = "https://api.iconify.design";
 const STORAGE_KEY = "open-icon-picker:sources";
+const PACK_KEY = "open-icon-picker:pack";
 
 const i18n =
   (globalThis.browser && globalThis.browser.i18n) ||
@@ -29,10 +30,17 @@ const FALLBACK = {
   remove: "Remove",
   downloadSvg: "Download SVG",
   copyPng: "Copy as PNG",
+  addToPack: "Add to pack",
+  removeFromPack: "Remove from pack",
+  inPack: "in pack",
+  downloadZip: "Download ZIP",
+  packPreparing: "Preparing pack...",
+  packDownloaded: "Pack downloaded",
+  packError: "Could not build the pack",
   svgCopied: "SVG copied",
   svgDownloaded: "SVG downloaded",
   pngCopied: "PNG copied",
-  hint: "Arrows navigate \u00b7 Enter copy SVG \u00b7 d download \u00b7 p PNG \u00b7 / search",
+  hint: "Arrows navigate \u00b7 Enter copy SVG \u00b7 d download \u00b7 p PNG \u00b7 a pack \u00b7 / search",
 };
 
 function t(key) {
@@ -58,9 +66,14 @@ const pickListEl = document.getElementById("pickList");
 const clearBtn = document.getElementById("clearSources");
 const gridEl = document.getElementById("grid");
 const statusEl = document.getElementById("status");
+const packEl = document.getElementById("pack");
+const packCountEl = document.getElementById("packCount");
+const packDownloadEl = document.getElementById("packDownload");
+const packClearEl = document.getElementById("packClear");
 const toastEl = document.getElementById("toast");
 
-let selected = loadSelected();
+let selected = loadList(STORAGE_KEY);
+let pack = loadList(PACK_KEY);
 let collectionNames = {};
 let allCollections = null;
 let icons = [];
@@ -70,9 +83,9 @@ let searchTimer = null;
 let reqId = 0;
 let activeIndex = 0;
 
-function loadSelected() {
+function loadList(key) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
   } catch {
@@ -80,9 +93,9 @@ function loadSelected() {
   }
 }
 
-function saveSelected() {
+function saveList(key, value) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
+    localStorage.setItem(key, JSON.stringify(value));
   } catch {
     /* ignore */
   }
@@ -207,10 +220,41 @@ function toggleSource(prefix) {
   const i = selected.indexOf(prefix);
   if (i === -1) selected.push(prefix);
   else selected.splice(i, 1);
-  saveSelected();
+  saveList(STORAGE_KEY, selected);
   renderSources();
   renderPickList(pickFilterEl.value);
   runSearch();
+}
+
+function renderPack() {
+  packEl.hidden = !pack.length;
+  const word = pack.length === 1 ? t("iconOne") : t("iconsMany");
+  packCountEl.textContent = `${pack.length} ${word} ${t("inPack")}`;
+}
+
+function isInPack(name) {
+  return pack.includes(name);
+}
+
+function togglePack(name) {
+  const i = pack.indexOf(name);
+  if (i === -1) pack.push(name);
+  else pack.splice(i, 1);
+  saveList(PACK_KEY, pack);
+  renderPack();
+  updatePackBadges();
+}
+
+function updatePackBadges() {
+  gridEl.querySelectorAll(".tile").forEach((tile) => {
+    const on = isInPack(tile.dataset.name);
+    tile.classList.toggle("in-pack", on);
+    const btn = tile.querySelector('.mini[data-act="pack"]');
+    if (btn) {
+      btn.textContent = on ? "\u2713" : "+";
+      btn.title = on ? t("removeFromPack") : t("addToPack");
+    }
+  });
 }
 
 function makeSvg(info) {
@@ -296,7 +340,7 @@ function render() {
   for (const name of icons) {
     const info = iconData.get(name);
     const tile = document.createElement("div");
-    tile.className = "tile";
+    tile.className = `tile${isInPack(name) ? " in-pack" : ""}`;
     tile.dataset.name = name;
     tile.title = name;
     tile.tabIndex = index === 0 ? 0 : -1;
@@ -318,6 +362,13 @@ function render() {
     png.title = t("copyPng");
     png.textContent = "PNG";
     actions.appendChild(png);
+
+    const add = document.createElement("button");
+    add.className = "mini";
+    add.dataset.act = "pack";
+    add.title = isInPack(name) ? t("removeFromPack") : t("addToPack");
+    add.textContent = isInPack(name) ? "\u2713" : "+";
+    actions.appendChild(add);
 
     tile.appendChild(actions);
     frag.appendChild(tile);
@@ -432,6 +483,139 @@ async function copyPng(name) {
   }
 }
 
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    table[n] = c >>> 0;
+  }
+  return table;
+})();
+
+function crc32(bytes) {
+  let c = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function makeZip(entries) {
+  const encoder = new TextEncoder();
+  const parts = [];
+  const central = [];
+  let offset = 0;
+  const now = new Date();
+  const dosTime = ((now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1)) & 0xffff;
+  const dosDate = (((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate()) & 0xffff;
+
+  for (const entry of entries) {
+    const nameBytes = encoder.encode(entry.name);
+    const data = entry.data;
+    const crc = crc32(data);
+
+    const local = new DataView(new ArrayBuffer(30));
+    local.setUint32(0, 0x04034b50, true);
+    local.setUint16(4, 20, true);
+    local.setUint16(6, 0x0800, true);
+    local.setUint16(8, 0, true);
+    local.setUint16(10, dosTime, true);
+    local.setUint16(12, dosDate, true);
+    local.setUint32(14, crc, true);
+    local.setUint32(18, data.length, true);
+    local.setUint32(22, data.length, true);
+    local.setUint16(26, nameBytes.length, true);
+    local.setUint16(28, 0, true);
+    parts.push(new Uint8Array(local.buffer), nameBytes, data);
+
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true);
+    cd.setUint16(4, 20, true);
+    cd.setUint16(6, 20, true);
+    cd.setUint16(8, 0x0800, true);
+    cd.setUint16(10, 0, true);
+    cd.setUint16(12, dosTime, true);
+    cd.setUint16(14, dosDate, true);
+    cd.setUint32(16, crc, true);
+    cd.setUint32(20, data.length, true);
+    cd.setUint32(24, data.length, true);
+    cd.setUint16(28, nameBytes.length, true);
+    cd.setUint16(30, 0, true);
+    cd.setUint16(32, 0, true);
+    cd.setUint16(34, 0, true);
+    cd.setUint16(36, 0, true);
+    cd.setUint32(38, 0, true);
+    cd.setUint32(42, offset, true);
+    central.push(new Uint8Array(cd.buffer), nameBytes);
+
+    offset += 30 + nameBytes.length + data.length;
+  }
+
+  let centralSize = 0;
+  for (const part of central) centralSize += part.length;
+
+  const eocd = new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0, 0x06054b50, true);
+  eocd.setUint16(4, 0, true);
+  eocd.setUint16(6, 0, true);
+  eocd.setUint16(8, entries.length, true);
+  eocd.setUint16(10, entries.length, true);
+  eocd.setUint32(12, centralSize, true);
+  eocd.setUint32(16, offset, true);
+  eocd.setUint16(20, 0, true);
+
+  const all = [...parts, ...central, new Uint8Array(eocd.buffer)];
+  let total = 0;
+  for (const part of all) total += part.length;
+  const out = new Uint8Array(total);
+  let pos = 0;
+  for (const part of all) {
+    out.set(part, pos);
+    pos += part.length;
+  }
+  return out;
+}
+
+async function mapLimit(items, limit, fn) {
+  const results = new Array(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const i = next++;
+      results[i] = await fn(items[i]);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+async function downloadPack() {
+  if (!pack.length) return;
+  toast(t("packPreparing"));
+  try {
+    const entries = (
+      await mapLimit(pack, 8, async (name) => {
+        try {
+          const svg = await fetchSvg(name);
+          return { name: `${name.replace(":", "-")}.svg`, data: new TextEncoder().encode(svg) };
+        } catch {
+          return null;
+        }
+      })
+    ).filter(Boolean);
+    if (!entries.length) throw new Error("empty");
+    const blob = new Blob([makeZip(entries)], { type: "application/zip" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `icon-pack-${entries.length}.zip`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast(t("packDownloaded"));
+  } catch (err) {
+    toast(t("packError"));
+  }
+}
+
 sourcesEl.addEventListener("click", (event) => {
   const x = event.target.closest(".pill-x");
   if (x) {
@@ -453,10 +637,19 @@ pickFilterEl.addEventListener("input", () => renderPickList(pickFilterEl.value))
 
 clearBtn.addEventListener("click", () => {
   selected = [];
-  saveSelected();
+  saveList(STORAGE_KEY, selected);
   renderSources();
   renderPickList(pickFilterEl.value);
   runSearch();
+});
+
+packDownloadEl.addEventListener("click", downloadPack);
+
+packClearEl.addEventListener("click", () => {
+  pack = [];
+  saveList(PACK_KEY, pack);
+  renderPack();
+  updatePackBadges();
 });
 
 gridEl.addEventListener("focusin", (event) => {
@@ -469,12 +662,17 @@ gridEl.addEventListener("click", (event) => {
   const tile = event.target.closest(".tile");
   if (!tile) return;
   const name = tile.dataset.name;
-  if (!mini) {
-    copySvg(name);
+  if (mini) {
+    if (mini.dataset.act === "download") downloadSvg(name);
+    else if (mini.dataset.act === "png") copyPng(name);
+    else if (mini.dataset.act === "pack") togglePack(name);
     return;
   }
-  if (mini.dataset.act === "download") downloadSvg(name);
-  if (mini.dataset.act === "png") copyPng(name);
+  if (event.ctrlKey || event.metaKey || event.shiftKey) {
+    togglePack(name);
+    return;
+  }
+  copySvg(name);
 });
 
 gridEl.addEventListener("keydown", (event) => {
@@ -512,6 +710,10 @@ gridEl.addEventListener("keydown", (event) => {
     case "Enter":
     case " ":
       if (name) copySvg(name);
+      break;
+    case "a":
+    case "A":
+      if (name) togglePack(name);
       break;
     case "d":
     case "D":
@@ -570,5 +772,6 @@ document.addEventListener("keydown", (event) => {
 
 localize();
 renderSources();
+renderPack();
 loadCollections();
 qEl.focus();

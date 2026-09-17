@@ -77,10 +77,31 @@
   "svgDownloaded": {
     "message": "SVG downloaded"
   },
+  "addToPack": {
+    "message": "Add to pack"
+  },
+  "removeFromPack": {
+    "message": "Remove from pack"
+  },
+  "inPack": {
+    "message": "in pack"
+  },
+  "downloadZip": {
+    "message": "Download ZIP"
+  },
+  "packPreparing": {
+    "message": "Preparing pack..."
+  },
+  "packDownloaded": {
+    "message": "Pack downloaded"
+  },
+  "packError": {
+    "message": "Could not build the pack"
+  },
   "pngCopied": {
     "message": "PNG copied"
   },
   "hint": {
-    "message": "Arrows navigate \u00b7 Enter copy SVG \u00b7 d download \u00b7 p PNG \u00b7 / search"
+    "message": "Arrows navigate \u00b7 Enter copy SVG \u00b7 d download \u00b7 p PNG \u00b7 a pack \u00b7 / search"
   }
 }

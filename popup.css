@@ -213,6 +213,11 @@ header {
 .tile:hover { background: var(--tile-hover); border-color: var(--accent); }
 .tile:active { transform: scale(.94); }
 
+.tile.in-pack {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
 .tile:focus {
   outline: none;
   border-color: var(--accent);
@@ -258,6 +263,40 @@ header {
   font-size: 10.5px;
   border-top: 1px solid #303038;
 }
+
+.pack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-top: 1px solid #303038;
+  background: #202027;
+}
+
+.pack-count {
+  flex: 1;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pack-btn {
+  flex: none;
+  border: 0;
+  border-radius: 7px;
+  padding: 6px 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pack-btn:hover { filter: brightness(1.12); }
+.pack-btn:active { transform: scale(.97); }
 
 .toast {
   position: fixed;

@@ -23,7 +23,14 @@
 
   <div id="status" class="status" data-i18n="emptyHint">Type to search 200,000+ icons.</div>
   <main id="grid" class="grid"></main>
-  <footer class="hint" data-i18n="hint">Arrows navigate &middot; Enter copy SVG &middot; d download &middot; p PNG &middot; / search</footer>
+
+  <div id="pack" class="pack" hidden>
+    <span id="packCount" class="pack-count"></span>
+    <button id="packDownload" class="pack-btn" data-i18n="downloadZip">Download ZIP</button>
+    <button id="packClear" class="link" data-i18n="clear">Clear</button>
+  </div>
+
+  <footer class="hint" data-i18n="hint">Arrows navigate &middot; Enter copy SVG &middot; d download &middot; p PNG &middot; a pack &middot; / search</footer>
 
   <div id="toast" class="toast" hidden></div>
   <script src="popup.js"></script>
